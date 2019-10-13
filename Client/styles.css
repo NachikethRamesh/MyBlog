@@ -1,0 +1,86 @@
+body,
+html {
+    height: 100%;
+}
+
+.bg {
+    /* The image used */
+    background-image: url("navbarimg.jpg");
+
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: round;
+    background-size: cover;
+}
+
+.h1Container {
+    border: 1% solid black;
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 20%;
+    background-color: whitesmoke;
+    opacity: 0.9;
+}
+
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+section {
+    padding: 1px;
+}
+
+section .section-title {
+    text-align: center;
+    color: red;
+    margin-bottom: 1px;
+    text-transform: uppercase;
+}
+
+#footer {
+    background-color: #D9230F !important;
+    border-color: #ba1e0d !important;
+}
+
+#footer a {
+    color: #ffffff;
+    text-decoration: none !important;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+
+body {
+    font-size: 22px;
+}
+
+h1 {
+    font-size: 44px;
+}
+
+h3 {
+    font-size: 40px;
+}
+
+h4 {
+    font-size: 32px;
+}
+
+@media (min-width: 768) {
+    body {
+        font-size: 17px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h3 {
+        font-size: 22px;
+    }
+
+    h4 {
+        font-size: 18px;
+    }
+}
