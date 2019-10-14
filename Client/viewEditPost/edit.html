@@ -5,33 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="editor.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <title>MyBlog Text Editor</title>
 
 </head>
 
+<h2 class="header">MyBlog Editor</h2>
 
+<div id="toolbar">
 
-<div id="heading" class="heading" contenteditable="true"></div>
-<div id="content" class="content" contenteditable="true"></div>
-
-<div id="addImg">
-    <button id="new_image" type="button" class="button-primary"
-        style="font-family:'Times New Roman', Times, serif; font-size: 16px;">Insert Image</button>
 </div>
 
-<div id="addMedia">
-    <button id="new_media" type="button" class="button-primary"
-        style="font-family:'Times New Roman', Times, serif; font-size: 16px;">Insert Media File</button>
+<div id="editor">
+
 </div>
 
-<div id="postArticle">
-    <button id="post" type="button" class="button-primary"
-        style="font-family:'Times New Roman', Times, serif; font-size: 16px;">Post!</button>
-</div>
-
-<div id="message"></div>
+<div class="container javascript" id="delta-container"></div>
 
 <script src="edit.js"></script>
 
