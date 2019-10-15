@@ -3,6 +3,17 @@ html {
     height: 100%;
 }
 
+.form {
+    border: 1% solid black;
+    height: 50%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 20%;
+    background-color: whitesmoke;
+    padding: 2% 2% 2% 2%;
+    align-content: center;
+}
+
 .bg {
     /* The image used */
     background-image: url("navbarimg.jpg");
@@ -22,6 +33,17 @@ html {
     margin-left: 10%;
     margin-right: 10%;
     margin-bottom: 20%;
+    background-color: whitesmoke;
+    opacity: 0.9;
+}
+
+.h1Container-login {
+    border: 1% solid black;
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 20%;
+    padding: 10% 10% 10% 10%;
     background-color: whitesmoke;
     opacity: 0.9;
 }
@@ -83,4 +105,9 @@ h4 {
     h4 {
         font-size: 18px;
     }
+}
+
+.individualPosts {
+    text-align: center;
+    color: red;
 }

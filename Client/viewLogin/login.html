@@ -5,11 +5,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../bootstrap.min.css">
+    <title>Document</title>
 </head>
 
-<body>
+<body class="bg">
+    <main>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="../index.html">Nachiketh Ramesh</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse navbar-alt" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" id="home" href="../index.html">Home </a>
+                    <a class="nav-item nav-link" id="about" href="/Client/viewAbout/about.html">About</a>
+                    <a class="nav-item nav-link active" id="login" href="/Client/viewLogin/login.html">Login</a>
+                </div>
+            </div>
+        </nav>
 
+
+        <body>
+            <div class="h1Container-login">
+                <h1 style="text-align: center; padding: 20px; color: black; font-size: 300%;">User Login Page.
+                </h1>
+
+                <h3 style="text-align: center; padding: 20px; color: black">Only Nachiketh can login.
+                    Sorry :(
+                </h3>
+
+                <h3 style="text-align: center; padding: 20px; color: black">I am working on features to include multiple
+                    authors. It will take some work. If you are good at development and want to lend me a hand in coding
+                    all the additional features, then please drop
+                    an email at <u><a
+                            href="mailTo:nrames609@gmail.com?Subject=I%20will%20help%20you.%20Let's%20build%20this%20thing!">
+                            nrames609@gmail.com</a></u>.
+                </h3>
+
+                <h2 style="text-align: center; padding: 20px; color: black"><u><a href="../index.html">
+                            Off you go!</a></u>
+                </h2>
+            </div>
+
+            <form class="form">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input id="email" type="email" class="form-control" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Enter email" style="width: 50%;">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input id="password" type="password" class="form-control" id="exampleInputPassword1"
+                        placeholder="Password" style="width: 50%;">
+                </div>
+                <button id=" submitButton" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+
+
+        </body>
+
+        <section id="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p>I do not own the rights to the background image used in this website. I have used it as per
+                            the <u><a href="https://creativecommons.org/licenses/by-nd/4.0/">CC-BY-ND</a></u>
+                            norms. Image source: <u><a
+                                    href="https://bryanmmathers.com/perspective/">bryanmmathers.com</a></u></p>
+                        <p class="h6">&copy All right Reversed.<a class="text-green ml-2" target="_blank">Nachiketh
+                                Ramesh</a></p>
+                    </div>
+                    </hr>
+                </div>
+            </div>
+        </section>
+
+    </main>
 </body>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 </html>
