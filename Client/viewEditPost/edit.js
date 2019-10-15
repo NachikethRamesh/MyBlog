@@ -1,7 +1,12 @@
-var container = document.getElementById('editor');
+const backendServerPostEssay = "http://localhost:5002/newpost";
+const messageTag = document.getElementById('message');
 
-var toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+const container = document.getElementById('editor');
+
+const toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],
+
+    // toggled buttons
     ['blockquote', 'code-block', 'image', 'video', 'link'],
 
     // custom button values
@@ -51,7 +56,7 @@ var toolbarOptions = [
     ['clean']
 ];
 
-var options = {
+const options = {
     debug: 'info',
     modules: {
         toolbar: toolbarOptions
@@ -63,4 +68,49 @@ var options = {
 
 var editor = new Quill(container, options);
 
-quill.on('text-change', update);
+//Post the essay
+const postButton = document.getElementById("submitButton");
+postButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const postObject = {
+        "content": editor.container.firstChild.innerHTML
+    };
+
+    sendData(postObject);
+});
+
+async function sendData(dataObject) {
+    let response = await fetch(backendServerPostEssay, {
+        method: "POST",
+        body: JSON.stringify(dataObject),
+        headers: {
+            "content-type": "application/JSON"
+        }
+    });
+
+    let json = await response.json();
+
+    let pingback = json.message;
+
+    this.removeTag();
+
+    if (pingback.toString().toLowerCase().includes("posted")) {
+        this.dynamicMessage("Article Posted!");
+    } else {
+        this.dynamicMessage("Error :( Retry posting again.");
+    };
+};
+
+function removeTag() {
+    if (document.getElementById("tempMessage") != null && document.getElementById("tempMessage") != undefined) {
+        document.getElementById("tempMessage").remove();
+    };
+};
+
+function dynamicMessage(textMessage) {
+    const pTag = document.createElement("p");
+    pTag.setAttribute("id", "tempMessage");
+    pTag.textContent = textMessage;
+    messageTag.appendChild(pTag);
+};

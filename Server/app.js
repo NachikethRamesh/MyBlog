@@ -2,8 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const monk = require('monk');
+
+dotenv.config();
 
 const app = express();
+
+// Connection URL
+const url = 'mongodb+srv://MyBlog:Satanspeak123@pagecluster-v39xp.mongodb.net/MyBlogMainDB?retryWrites=true&w=majority';
 
 //Morgan is used for logging
 app.use(morgan('tiny'));
@@ -16,12 +23,55 @@ app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.json({
-        message: "Connected"
+        message: 'Connected'
     })
 });
 
+app.post('/newpost', (req, res) => {
+    const db = monk(url);
+
+    db.then(() => {
+            console.log('Connected correctly to server');
+            var insertObject = {
+                content: req.body.content
+            };
+
+            const articleCollection = db.get('Articles');
+            console.log("collection opened");
+
+            articleCollection.insert(insertObject)
+                .then(() => console.log("data inseterd"))
+                .then(() => {
+                    res.status(200);
+                    res.end(JSON.stringify({
+                        message: "posted"
+                    }))
+                })
+                .catch((err) => {
+                    db.close();
+                    Promise.reject(err);
+                    res.status(400);
+                    res.end(JSON.stringify({
+                        message: "error"
+                    }))
+                })
+        })
+        .catch((err) => {
+            Promise.reject(err);
+            res.status(400);
+            res.end(JSON.stringify({
+                message: "error"
+            }))
+        });
+});
+
+async function generateNewPage() {
+
+};
+
 //Start server on a port
-const port = process.env.PORT || 5001;
+//const port = process.env.PORT || 5002;
+const port = 5002;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
