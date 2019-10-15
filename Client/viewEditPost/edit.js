@@ -96,7 +96,7 @@ async function sendData(dataObject) {
     this.removeTag();
 
     if (pingback.toString().toLowerCase().includes("posted")) {
-        this.dynamicMessage("Article Posted!");
+        this.dynamicMessage("Article Posted! You may close the page.");
     } else {
         this.dynamicMessage("Error :( Retry posting again.");
     };
