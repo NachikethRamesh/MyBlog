@@ -3,17 +3,6 @@ html {
     height: 100%;
 }
 
-.form {
-    border: 1% solid black;
-    height: 50%;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-bottom: 20%;
-    background-color: whitesmoke;
-    padding: 2% 2% 2% 2%;
-    align-content: center;
-}
-
 .bg {
     /* The image used */
     background-image: url("navbarimg.jpg");

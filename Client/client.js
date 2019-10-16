@@ -2,9 +2,9 @@ const backendServerShowAllTitles = 'http://localhost:5002/main';
 
 const allPostsTag = document.getElementById('allPosts');
 
-document.onload((event) => {
-    event.preventDefault();
-
+window.onload(() => {
+    //event.preventDefault();
+    console.log("page reloaded");
     const postObject = {
         'ping': 'pageReq'
     };
