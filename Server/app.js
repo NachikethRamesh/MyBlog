@@ -69,6 +69,12 @@ app.get('/', (req, res) => {
     })
 });
 
+app.get('/login', (req, res) => {
+    res.json({
+        message: 'login part'
+    })
+});
+
 //New post added
 app.post('/newpost', (req, res) => {
     const db = monk(url);
@@ -122,6 +128,8 @@ app.post('/newpost', (req, res) => {
 app.post('/login', (req, res) => {
     const db = monk(url);
     const password = req.body.password.toString().trim();
+
+    console.log(password)
 
     var verifObject = {
         email: req.body.email,
