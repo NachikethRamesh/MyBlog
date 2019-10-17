@@ -26,6 +26,12 @@ html {
     opacity: 0.9;
 }
 
+.h1ContainerFullPosts {
+    background-color: whitesmoke;
+    opacity: 0.9;
+    border: 1% solid black;
+}
+
 .h1Container-login {
     border: 1% solid black;
     margin-top: 5%;

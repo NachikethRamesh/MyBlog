@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 const monk = require('monk');
 const crypto = require('crypto');
 const cookieSession = require('cookie-session');
+const fs = require('fs');
+const path = require('path');
 
 dotenv.config();
 
@@ -69,17 +71,22 @@ app.get('/', (req, res) => {
     })
 });
 
-app.get('/login', (req, res) => {
-    res.json({
-        message: 'login part'
-    })
-});
-
 //New post added
 app.post('/newpost', (req, res) => {
+    console.log("newpost api")
     const db = monk(url);
+
     var title = beforeAfter(">", "</", req.body.content.toString()).trim();
-    var link = title.replace(' ', '_');
+    console.log(title)
+    if (title.includes('<') || title.includes('>')) {
+        title = beforeAfter(">", "", title.toString()).trim();
+    }
+    console.log(title)
+    if (title.includes('<') || title.includes('>')) {
+        title = beforeAfter("", "<", title.toString()).trim();
+    }
+    console.log(title)
+    var link = title.split(' ').join('_');
     link = '/' + link + '.html';
 
     db.then(() => {
@@ -98,38 +105,66 @@ app.post('/newpost', (req, res) => {
                 .then(() => {
                     req.session = null;
                     db.close();
-                    res.status(200);
-                    res.end(JSON.stringify({
-                        message: "posted",
-                        link: link
-                    }))
+
+                    const filePath = './views' + link;
+                    console.log(filePath);
+                    createHTMLFile(req.body.content, filePath, title)
+                        .then(() => {
+                            console.log("file created")
+                            var resolvedPath = path.resolve(filePath);
+                            console.log(resolvedPath)
+                            res.render(resolvedPath, (err) => {
+                                if (err) {
+                                    Promise.reject(err);
+                                    res.status(400);
+                                    res.end(JSON.stringify({
+                                        message: "error",
+                                        link: "error"
+                                    }));
+                                } else {
+                                    Promise.resolve("posted");
+                                    res.status(200);
+                                    res.end(JSON.stringify({
+                                        message: "posted",
+                                        link: link
+                                    }));
+                                }
+                            })
+                        })
+                        .catch((err) => {
+                            Promise.reject(err);
+                            res.status(400);
+                            res.end(JSON.stringify({
+                                message: "error",
+                                link: "error"
+                            }));
+                        });
+
                 })
                 .catch((err) => {
-                    db.close();
                     Promise.reject(err);
                     res.status(400);
                     res.end(JSON.stringify({
                         message: "error",
                         link: "error"
-                    }))
+                    }));
                 })
         })
         .catch((err) => {
+            db.close();
             Promise.reject(err);
             res.status(400);
             res.end(JSON.stringify({
                 message: "error",
                 link: "error"
-            }))
-        });
+            }));
+        })
 });
 
 //login request handler
 app.post('/login', (req, res) => {
     const db = monk(url);
     const password = req.body.password.toString().trim();
-
-    console.log(password)
 
     var verifObject = {
         email: req.body.email,
@@ -232,6 +267,50 @@ app.post('/main', (req, res) => {
         });
 });
 
+//full page
+app.post('/full', (req, res) => {
+    const db = monk(url);
+
+    console.log('full page api')
+
+    var searchObject = {
+        link: link
+    };
+
+    var content = "";
+    var htmlContent = "";
+
+    db.then(() => {
+            console.log('Connected correctly to db server');
+
+            const articleCollection = db.get('Articles');
+            console.log("collection opened");
+
+            articleCollection.findOne(searchObject)
+                .then((result) => {
+                    console.log("article found");
+                    content = result.content;
+                    htmlContent = generatePage(content);
+                    return htmlContent;
+                })
+                .then((htmlContent) => {
+                    db.close();
+                    res.writeHead(200, {
+                        'Content-Type': 'text/html',
+                        'Content-Length': htmlContent
+                    });
+                    res.end(html);
+                })
+                .catch((err) => {
+                    db.close();
+                    Promise.reject(err);
+                })
+        })
+        .catch((err) => {
+            Promise.reject(err);
+        });
+});
+
 //Start server on a port
 //const port = process.env.PORT || 5002;
 const port = 5002;
@@ -243,42 +322,90 @@ function beforeAfter(before, after, input) {
     input = input.substring(0);
     let firstIndex = input.indexOf(before) + 1;
     let secondIndex = input.indexOf(after);
-    var outputString = input.substring(firstIndex, secondIndex);
+    var outputString = "";
+    if (before == "") {
+        outputString = input.substring(0, secondIndex);
+    } else if (after == "") {
+        outputString = input.substring(firstIndex);
+    } else {
+        outputString = input.substring(firstIndex, secondIndex);
+    }
     return outputString;
 };
 
-function addNewPage(title) {
-    const db = monk(url);
+function generatePage(content, title) {
+    var htmlBody = `<!DOCTYPE html>
+<html lang="en">
 
-    var content = "";
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/Client/styles.css">
+    <link rel="stylesheet" href="/Client/bootstrap.min.css">
+    <title>${title}</title>
+</head>
 
-    db.then(() => {
-            console.log('Connected correctly to db server');
-            var searchObject = {
-                title: title.trim(),
-            };
+<body class="bg">
+    <main>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="/Client/index.html">Nachiketh Ramesh</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse navbar-alt" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" id="home" href="/Client/index.html">Home </a>
+                    <a class="nav-item nav-link" id="about" href="/Client/viewAbout/about.html">About</a>
+                    <a class="nav-item nav-link" id="login" href="/Client/viewLogin/login.html">Login</a>
+                </div>
+            </div>
+        </nav>
 
-            const articleCollection = db.get('Articles');
-            console.log("collection opened");
 
-            articleCollection.findOne(searchObject)
-                .then((result) => {
-                    console.log("article found");
-                    attachTagsToNewPage(result.content);
-                })
-                .then(() => {
-                    db.close();
-                })
-                .catch((err) => {
-                    db.close();
-                    Promise.reject(err);
-                })
-        })
-        .catch((err) => {
-            Promise.reject(err);
-        });
+        <body>
+            <div id = "articleBody" class = "h1ContainerFullPosts">
+                <div id = "hereGoesTheBodyFor${title}">
+                    ${content}
+                </div>
+            </div>
+
+        </body>
+
+        <section id="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p>I do not own the rights to the background image used in this website. I have used it as per
+                            the <u><a href="https://creativecommons.org/licenses/by-nd/4.0/">CC-BY-ND</a></u>
+                            norms. Image source: <u><a
+                                    href="https://bryanmmathers.com/perspective/">bryanmmathers.com</a></u></p>
+                        <p class="h6">&copy All right Reversed.<a class="text-green ml-2" target="_blank">Nachiketh
+                                Ramesh</a></p>
+                    </div>
+                    </hr>
+                </div>
+            </div>
+        </section>
+        <script src='/Client/viewFullPost/full.js'></script>
+    </main>
+</body>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</html>`;
+
+    return htmlBody.toString();
 };
 
-function attachTagsToNewPage(contents) {
-    console.log(contents);
+async function createHTMLFile(content, filePath, title) {
+    var htmlContent = generatePage(content, title);
+    var htmlFile = fs.createWriteStream(filePath);
+    await htmlFile.write(htmlContent, {
+        encoding: 'utf8'
+    });
+    htmlFile.end();
 };
