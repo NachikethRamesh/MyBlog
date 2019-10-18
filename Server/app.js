@@ -72,7 +72,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/newpost', (req, res) => {
-    console.log('new post request')
     const link = '/edit.html'
     var editHTMLPath = path.resolve('./views/edit.html');
     res.render(editHTMLPath, (err) => {
@@ -98,7 +97,6 @@ app.get('/newpost', (req, res) => {
 
 //New post added
 app.post('/newpost', (req, res) => {
-    console.log("newpost api")
     const db = monk(url);
 
     var title = beforeAfter(">", "</", req.body.content.toString()).trim();
@@ -274,15 +272,16 @@ app.post('/main', (req, res) => {
                     db.close();
                     res.status(200);
                     res.end(JSON.stringify({
-                        title: result.title,
-                        link: result.link
-                    }))
+                        result: result
+                    }));
                 })
                 .catch((err) => {
                     db.close();
                     Promise.reject(err);
                     res.status(400);
-                    res.render('error');
+                    res.end(JSON.stringify({
+                        result: "error"
+                    }));
                 })
         })
         .catch((err) => {
@@ -391,8 +390,8 @@ function generatePage(content, title) {
 
 
         <body>
-            <div id = "articleBody" class = "h1ContainerFullPosts">
-                <div id = "hereGoesTheBodyFor${title}">
+            <div id = "articleBody" class = "h1Container">
+                <div id = "hereGoesTheBodyFor${title}" class = "textfeatures">
                     ${content}
                 </div>
             </div>
