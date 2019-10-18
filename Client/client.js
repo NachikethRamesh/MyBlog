@@ -6,7 +6,7 @@ window.onload(() => {
     //event.preventDefault();
     console.log("page reloaded");
     const postObject = {
-        'ping': 'pageReq'
+        ping: 'pageReq'
     };
 
     reqData(postObject);
@@ -40,6 +40,8 @@ function removeTag() {
 };
 
 function addTag(tagsData) {
+
+    console.log(tagsData)
     //create container tag
     const postContainer = document.createElement('div');
     postContainer.setAttribute('id', 'postCont');
@@ -48,7 +50,7 @@ function addTag(tagsData) {
     //create all post tags with title and links
     for (var elem in tagsData) {
         let title = tagsData[elem].title.toString().trim();
-        let href = tagsData[elem].href.toString().trim();
+        let href = tagsData[elem].link.toString().trim();
 
         const divTag = document.createElement('li');
         divTag.setAttribute('href', href);

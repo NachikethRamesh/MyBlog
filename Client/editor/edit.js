@@ -2,82 +2,25 @@ const backendServerPostEssay = "http://localhost:5002/newpost";
 const messageTag = document.getElementById('message');
 //const path = require('path');
 
-const container = document.getElementById('editor');
-
-const toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'],
-
-    // toggled buttons
-    ['blockquote', 'code-block', 'image', 'video', 'link'],
-
-    // custom button values
-    [{
-        'list': 'ordered'
-    }, {
-        'list': 'bullet'
-    }],
-
-    [{
-        'script': 'sub'
-    }, {
-        'script': 'super'
-    }],
-
-    // superscript/subscript
-    [{
-        'direction': 'rtl'
-    }],
-
-    // text direction
-    [{
-        'size': ['small', false, 'large', 'huge']
-    }],
-
-    // custom dropdown
-    [{
-        'header': [1, 2, 3, 4, 5, 6, false]
-    }],
-
-    [{
-        'color': []
-    }, {
-        'background': []
-    }],
-
-    // dropdown with defaults from theme
-    [{
-        'font': ['Times New Roman']
-    }],
-
-    [{
-        'align': []
-    }],
-
-    // remove formatting button
-    ['clean']
-];
-
-const options = {
-    debug: 'info',
-    modules: {
-        toolbar: toolbarOptions
-    },
-    placeholder: 'Let your imaginations run wild...',
-    readOnly: false,
-    theme: 'snow',
-};
-
-var editor = new Quill(container, options);
+var editor = new wysihtml5.Editor('editor', {
+    toolbar: 'toolbar',
+    parserRules: wysihtml5ParserRules // defined in file parser rules javascript
+});
+editor.focus()
 
 //Post the essay
 const postButton = document.getElementById("submitButton");
 postButton.addEventListener("click", (event) => {
     event.preventDefault();
 
+    editor.disable();
+
     const postObject = {
         // "content": editor.container.firstChild.innerHTML
-        "content": editor.root.innerHTML
+        "content": editor.getValue()
     };
+
+    console.log(editor.getValue())
 
     sendData(postObject);
 });

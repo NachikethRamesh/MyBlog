@@ -106,3 +106,15 @@ h4 {
     text-align: center;
     color: red;
 }
+
+.textfeatures {
+    text-align: center;
+    align-content: center;
+    font-family: 'Times New Roman';
+    padding: 1% 1% 1% 1%;
+}
+
+img {
+    width: 70%;
+    height: 50%;
+}

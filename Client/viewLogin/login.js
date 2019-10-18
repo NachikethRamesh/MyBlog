@@ -1,4 +1,5 @@
 const backendServerLogin = "http://localhost:5002/login";
+const backendServerPostEssay = "http://localhost:5002/newpost";
 
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
@@ -46,7 +47,20 @@ async function sendLoginData(dataObject) {
     if (pingback.toString().toLowerCase().includes("error")) {
         this.dynamicMessage("Access denied");
     } else {
-        window.location.href = '/Client/editor/edit.html';
+        let response = await fetch(backendServerPostEssay, {
+            method: "GET",
+            headers: {
+                "content-type": "application/JSON"
+            }
+        });
+
+        let json = await response.json();
+
+        let pingback = json.message;
+        let link = json.link;
+        link = '/server/views' + link;
+
+        window.location.href = link;
     };
 };
 
