@@ -71,6 +71,31 @@ app.get('/', (req, res) => {
     })
 });
 
+app.get('/newpost', (req, res) => {
+    console.log('new post request')
+    const link = '/edit.html'
+    var editHTMLPath = path.resolve('./views/edit.html');
+    res.render(editHTMLPath, (err) => {
+        if (err) {
+            res.render(path.resolve('./views/error.html'), (err) => {
+                Promise.reject(err);
+                res.status(400);
+                res.end(JSON.stringify({
+                    message: "error",
+                    link: "/error.html"
+                }));
+            })
+        } else {
+            Promise.resolve("posted");
+            res.status(200);
+            res.end(JSON.stringify({
+                message: "page sent",
+                link: link
+            }));
+        }
+    });
+});
+
 //New post added
 app.post('/newpost', (req, res) => {
     console.log("newpost api")

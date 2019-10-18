@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/Server/node_modules/wysihtml/dist/wysihtml-toolbar.min.js"></script>
+    <script src="/Server/node_modules/wysihtml/parser_rules/advanced_and_extended.js"></script>
+    <title>MyBlog - Text Editor</title>
+
+</head>
+
+<h2 class="header">MyBlog Editor - Be Creative!</h2>
+
+<div id="toolbar">
+    <a data-wysihtml5-command="bold">bold</a>
+    <a data-wysihtml5-command="italic">italic</a>
+    <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1">H1</a>
+    <a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="p">P</a>
+</div>
+
+<textarea id="editor" placeholder="Let your imaginations run wild..."></textarea>
+
+<button id="submitButton">Submit Post!</button>
+
+<div id="message"></div>
+
+<script src="/Client/editor/edit.js"></script>
+
+</html>
