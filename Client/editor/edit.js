@@ -1,6 +1,5 @@
 const backendServerPostEssay = "http://localhost:5002/newpost";
 const messageTag = document.getElementById('message');
-//const path = require('path');
 
 var editor = new wysihtml5.Editor('editor', {
     toolbar: 'toolbar',
@@ -19,8 +18,6 @@ postButton.addEventListener("click", (event) => {
         // "content": editor.container.firstChild.innerHTML
         "content": editor.getValue()
     };
-
-    console.log(editor.getValue())
 
     sendData(postObject);
 });

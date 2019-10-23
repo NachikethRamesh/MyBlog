@@ -29,7 +29,6 @@ postButton.addEventListener("click", (event) => {
 });
 
 async function sendLoginData(dataObject) {
-    console.log(dataObject)
     let response = await fetch(backendServerLogin, {
         method: "POST",
         body: JSON.stringify(dataObject),

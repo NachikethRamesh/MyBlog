@@ -26,6 +26,13 @@ html {
     opacity: 0.9;
 }
 
+.allPosts {
+    border: 1% solid black;
+    padding: 10% 10% 10% 10%;
+    background-color: whitesmoke;
+    opacity: 0.9;
+}
+
 .h1ContainerFullPosts {
     background-color: whitesmoke;
     opacity: 0.9;
@@ -68,12 +75,19 @@ section .section-title {
     -webkit-text-decoration-skip: objects;
 }
 
+.textfeatures {
+    text-align: center;
+    align-content: center;
+    font-family: 'Times New Roman';
+    padding: 1% 1% 1% 1%;
+}
+
 body {
     font-size: 22px;
 }
 
 h1 {
-    font-size: 44px;
+    font-size: 48px;
 }
 
 h3 {
@@ -84,13 +98,46 @@ h4 {
     font-size: 32px;
 }
 
+div .textfeatures p {
+    font-size: 24px;
+}
+
+div .textfeatures h1 {
+    font-size: 56px;
+}
+
+div .textfeatures h2 {
+    font-size: 50px;
+}
+
+div .textfeatures h3 {
+    font-size: 46px;
+}
+
+div .textfeatures h4 {
+    font-size: 38px;
+}
+
+div .textfeatures h5 {
+    font-size: 32px;
+}
+
+div .textfeatures h6 {
+    font-size: 28px;
+}
+
+div .textfeatures br {
+    display: block;
+    margin: 10px 0;
+}
+
 @media (min-width: 768) {
     body {
         font-size: 17px;
     }
 
     h1 {
-        font-size: 24px;
+        font-size: 28px;
     }
 
     h3 {
@@ -100,21 +147,42 @@ h4 {
     h4 {
         font-size: 18px;
     }
+
+    div .textfeatures p {
+        font-size: 16px;
+    }
+
+    div .textfeatures br {
+        display: block;
+        margin: 5px 0;
+    }
+
+    div .textfeatures h1 {
+        font-size: 40px;
+    }
+
+    div .textfeatures h2 {
+        font-size: 36px;
+    }
+
+    div .textfeatures h3 {
+        font-size: 32px;
+    }
+
+    div .textfeatures h4 {
+        font-size: 28px;
+    }
+
+    div .textfeatures h5 {
+        font-size: 24px;
+    }
+
+    div .textfeatures h6 {
+        font-size: 20px;
+    }
 }
 
-.individualPosts {
-    text-align: center;
-    color: red;
-}
-
-.textfeatures {
-    text-align: center;
-    align-content: center;
-    font-family: 'Times New Roman';
-    padding: 1% 1% 1% 1%;
-}
-
-img {
-    width: 70%;
+div .textfeatures img {
+    width: 80%;
     height: 50%;
 }

@@ -5,14 +5,15 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const monk = require('monk');
 const crypto = require('crypto');
+const randomstring = require("randomstring");
 const cookieSession = require('cookie-session');
 const fs = require('fs');
 const path = require('path');
 
 dotenv.config();
-
 const app = express();
 
+//Set views folder
 app.set('views', __dirname + '\\views\\');
 app.set('views');
 app.engine('html', require('ejs').renderFile);
@@ -27,15 +28,15 @@ app.use(cors());
 //Body parser parses the data received from client
 app.use(bodyParser.json());
 
-const secret = 'r@mesh' //env
+const secret = process.env.SESS_SECR
 app.use(cookieSession({
     name: 'session',
     keys: [secret],
 }));
 
-const pass = 'n@ch!k'; //env
-const algorithm = 'aes-192-cbc'; //env
-
+//Create a cipher
+const pass = process.env.CRY_PASSKEY;
+const algorithm = process.env.CRY_ALGO;
 createCipher = (pass, algorithm) => {
     return new Promise(resolve => {
         const key = crypto.scryptSync(pass, 'salt', 24);
@@ -45,7 +46,7 @@ createCipher = (pass, algorithm) => {
     });
 };
 
-// For this one, your own promise makes sense
+//Encrypt incoming password
 encryptTextAsPromise = (cipher, enteredPassword) => {
     return new Promise(resolve => {
         let cipherText = '';
@@ -62,22 +63,22 @@ encryptTextAsPromise = (cipher, enteredPassword) => {
     });
 };
 
-// Connection URL - put env variable
-const url = 'mongodb+srv://MyBlog:Satanspeak123@pagecluster-v39xp.mongodb.net/MyBlogMainDB?retryWrites=true&w=majority';
+//connection url for mongo db
+const url = process.env.MDB_URI;
 
 app.get('/', (req, res) => {
     res.json({
-        message: 'Connected'
+        message: 'frontend and backend connected'
     })
 });
 
 app.get('/newpost', (req, res) => {
     const link = '/edit.html'
-    var editHTMLPath = path.resolve('./views/edit.html');
+    const editHTMLPath = path.resolve('./views/edit.html');
     res.render(editHTMLPath, (err) => {
         if (err) {
-            res.render(path.resolve('./views/error.html'), (err) => {
-                Promise.reject(err);
+            res.render(path.resolve('./views/error.html'), () => {
+                // Promise.reject(err);
                 res.status(400);
                 res.end(JSON.stringify({
                     message: "error",
@@ -85,7 +86,7 @@ app.get('/newpost', (req, res) => {
                 }));
             })
         } else {
-            Promise.resolve("posted");
+            // Promise.resolve("posted");
             res.status(200);
             res.end(JSON.stringify({
                 message: "page sent",
@@ -97,55 +98,52 @@ app.get('/newpost', (req, res) => {
 
 //New post added
 app.post('/newpost', (req, res) => {
-    const db = monk(url);
-
-    var title = beforeAfter(">", "</", req.body.content.toString()).trim();
-    console.log(title)
-    if (title.includes('<') || title.includes('>')) {
-        title = beforeAfter(">", "", title.toString()).trim();
-    }
-    console.log(title)
-    if (title.includes('<') || title.includes('>')) {
-        title = beforeAfter("", "<", title.toString()).trim();
-    }
-    console.log(title)
-    var link = title.split(' ').join('_');
+    var link = randomstring.generate(25);
+    link = link.trim();
     link = '/' + link + '.html';
 
+    var content = req.body.content;
+
+    var title = beforeAfter('>', '</', content);
+    while (title.includes('>') || title.includes('<')) {
+        if (title.includes('<') || title.includes('>')) {
+            title = beforeAfter(">", "", title.toString()).trim();
+        }
+
+        if (title.includes('<') || title.includes('>')) {
+            title = beforeAfter("", "<", title.toString()).trim();
+        }
+    };
+
+    const db = monk(url);
     db.then(() => {
-            console.log('Connected correctly to db server');
             var insertObject = {
+                link: link,
                 title: title,
-                content: req.body.content,
-                link: link
+                content: content
             };
 
             const articleCollection = db.get('Articles');
-            console.log("collection opened");
 
             articleCollection.insert(insertObject)
-                .then(() => console.log("data inseterd"))
                 .then(() => {
                     req.session = null;
                     db.close();
 
                     const filePath = './views' + link;
-                    console.log(filePath);
-                    createHTMLFile(req.body.content, filePath, title)
+                    createHTMLFile(content, filePath, title)
                         .then(() => {
-                            console.log("file created")
                             var resolvedPath = path.resolve(filePath);
-                            console.log(resolvedPath)
-                            res.render(resolvedPath, (err) => {
+                            res.render(resolvedPath, err => {
                                 if (err) {
-                                    Promise.reject(err);
+                                    // Promise.reject(err);
                                     res.status(400);
                                     res.end(JSON.stringify({
                                         message: "error",
                                         link: "error"
                                     }));
                                 } else {
-                                    Promise.resolve("posted");
+                                    // Promise.resolve("posted");
                                     res.status(200);
                                     res.end(JSON.stringify({
                                         message: "posted",
@@ -154,8 +152,8 @@ app.post('/newpost', (req, res) => {
                                 }
                             })
                         })
-                        .catch((err) => {
-                            Promise.reject(err);
+                        .catch(() => {
+                            // Promise.reject(err);
                             res.status(400);
                             res.end(JSON.stringify({
                                 message: "error",
@@ -164,8 +162,8 @@ app.post('/newpost', (req, res) => {
                         });
 
                 })
-                .catch((err) => {
-                    Promise.reject(err);
+                .catch(() => {
+                    // Promise.reject(err);
                     res.status(400);
                     res.end(JSON.stringify({
                         message: "error",
@@ -173,9 +171,9 @@ app.post('/newpost', (req, res) => {
                     }));
                 })
         })
-        .catch((err) => {
+        .catch(() => {
             db.close();
-            Promise.reject(err);
+            // Promise.reject(err);
             res.status(400);
             res.end(JSON.stringify({
                 message: "error",
@@ -194,14 +192,9 @@ app.post('/login', (req, res) => {
     };
 
     db.then(() => {
-            console.log('Connected correctly to db server');
-
             const articleCollection = db.get('VerifColl');
-            console.log("collection opened");
-
             articleCollection.findOne(verifObject)
                 .then((result) => {
-                    console.log("data fetched");
                     db.close();
                     if (result != null || result != undefined) {
                         const savedPasskey = result.encryptedpassword.toString().trim();
@@ -211,11 +204,11 @@ app.post('/login', (req, res) => {
                             .then(data => {
                                 encryptedPasskey = data;
                                 if (encryptedPasskey == savedPasskey) {
-                                    res.status(400);
+                                    res.status(200);
                                     res.end(JSON.stringify({
                                         message: "granted"
                                     }));
-                                    Promise.resolve("granted");
+                                    // Promise.resolve("granted");
                                 } else {
                                     res.status(400);
                                     res.end(JSON.stringify({
@@ -223,8 +216,8 @@ app.post('/login', (req, res) => {
                                     }));
                                 };
                             })
-                            .catch((err) => {
-                                Promise.reject(err);
+                            .catch(() => {
+                                // Promise.reject(err);
                                 res.status(400);
                                 res.end(JSON.stringify({
                                     message: "error"
@@ -237,17 +230,17 @@ app.post('/login', (req, res) => {
                         }));
                     }
                 })
-                .catch((err) => {
+                .catch(() => {
                     db.close();
-                    Promise.reject(err);
+                    // Promise.reject(err);
                     res.status(400);
                     res.end(JSON.stringify({
                         message: "error"
                     }));
                 });
         })
-        .catch((err) => {
-            Promise.reject(err);
+        .catch(() => {
+            // Promise.reject(err);
             res.status(400);
             res.end(JSON.stringify({
                 message: "error"
@@ -260,15 +253,15 @@ app.post('/main', (req, res) => {
     const db = monk(url);
 
     db.then(() => {
-            console.log('Connected correctly to db server');
+            //console.log('Connected correctly to db server');
 
             const articleCollection = db.get('Articles');
-            console.log("collection opened");
+            //console.log("collection opened");
 
             articleCollection.find()
-                .then(() => console.log("fetched all"))
                 .then((result) => {
-                    console.log(result);
+                    //console.log("fetched all")
+                    //console.log(JSON.stringify(result));
                     db.close();
                     res.status(200);
                     res.end(JSON.stringify({
@@ -287,57 +280,14 @@ app.post('/main', (req, res) => {
         .catch((err) => {
             Promise.reject(err);
             res.status(400);
-            res.render('error');
-        });
-});
-
-//full page
-app.post('/full', (req, res) => {
-    const db = monk(url);
-
-    console.log('full page api')
-
-    var searchObject = {
-        link: link
-    };
-
-    var content = "";
-    var htmlContent = "";
-
-    db.then(() => {
-            console.log('Connected correctly to db server');
-
-            const articleCollection = db.get('Articles');
-            console.log("collection opened");
-
-            articleCollection.findOne(searchObject)
-                .then((result) => {
-                    console.log("article found");
-                    content = result.content;
-                    htmlContent = generatePage(content);
-                    return htmlContent;
-                })
-                .then((htmlContent) => {
-                    db.close();
-                    res.writeHead(200, {
-                        'Content-Type': 'text/html',
-                        'Content-Length': htmlContent
-                    });
-                    res.end(html);
-                })
-                .catch((err) => {
-                    db.close();
-                    Promise.reject(err);
-                })
-        })
-        .catch((err) => {
-            Promise.reject(err);
+            res.render(JSON.stringify({
+                result: "error"
+            }));
         });
 });
 
 //Start server on a port
-//const port = process.env.PORT || 5002;
-const port = 5002;
+const port = process.env.PORT || 5002;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });

@@ -1,10 +1,8 @@
 const backendServerShowAllTitles = 'http://localhost:5002/main';
-
 const allPostsTag = document.getElementById('allPosts');
 
-window.onload(() => {
-    //event.preventDefault();
-    console.log("page reloaded");
+document.addEventListener("DOMContentLoaded", (event) => {
+    event.preventDefault();
     const postObject = {
         ping: 'pageReq'
     };
@@ -24,13 +22,13 @@ async function reqData(dataObject) {
 
     let json = await response.json();
 
-    var pingback = JSON.parse(json);
+    let jsonArray = json.result;
 
     //Remove all post tags and refresh everytime page is reloaded
     this.removeTag();
 
     //add tags to main page
-    this.addTag(pingback);
+    this.addTag(jsonArray);
 };
 
 function removeTag() {
@@ -40,19 +38,20 @@ function removeTag() {
 };
 
 function addTag(tagsData) {
-
     console.log(tagsData)
+
     //create container tag
     const postContainer = document.createElement('div');
     postContainer.setAttribute('id', 'postCont');
     allPostsTag.appendChild(postContainer);
 
     //create all post tags with title and links
-    for (var elem in tagsData) {
-        let title = tagsData[elem].title.toString().trim();
-        let href = tagsData[elem].link.toString().trim();
+    for (let i = 0; i < tagsData.length; i++) {
+        let title = tagsData[i].title.toString().trim();
+        let href = '/Server/views' + tagsData[i].link.toString().trim();
+        console.log(href)
 
-        const divTag = document.createElement('li');
+        const divTag = document.createElement('h1');
         divTag.setAttribute('href', href);
         divTag.setAttribute('class', 'individualPosts');
         divTag.textContent = title;
