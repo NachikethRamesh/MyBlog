@@ -1,11 +1,12 @@
 {
-  "name": "Server",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "build": "node app.js"
   },
   "keywords": [],
   "author": "NachikethRamesh",
@@ -19,8 +20,10 @@
     "express": "^4.17.1",
     "monk": "^7.1.1",
     "morgan": "^1.9.1",
-    "nodemon": "^1.19.3",
     "quill": "^1.3.6",
     "randomstring": "^1.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
   }
 }

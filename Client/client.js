@@ -2,6 +2,7 @@ const backendServerShowAllTitles = 'http://localhost:5002/main';
 const allPostsTag = document.getElementById('allPosts');
 
 document.addEventListener("DOMContentLoaded", (event) => {
+    console.log("loaded");
     event.preventDefault();
     const postObject = {
         ping: 'pageReq'
@@ -48,10 +49,10 @@ function addTag(tagsData) {
     //create all post tags with title and links
     for (let i = 0; i < tagsData.length; i++) {
         let title = tagsData[i].title.toString().trim();
-        let href = '/Server/views' + tagsData[i].link.toString().trim();
+        let href = 'http://127.0.0.1:5500/Server/views' + tagsData[i].link.toString().trim();
         console.log(href)
 
-        const divTag = document.createElement('h1');
+        const divTag = document.createElement('a');
         divTag.setAttribute('href', href);
         divTag.setAttribute('class', 'individualPosts');
         divTag.textContent = title;
